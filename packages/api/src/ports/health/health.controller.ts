@@ -2,7 +2,7 @@ import config from "~/config.ts";
 
 import type { FastifyInstance } from "fastify";
 
-export function addHealthRoutes(fastify: FastifyInstance) {
+export default function addHealthRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/health",
     {

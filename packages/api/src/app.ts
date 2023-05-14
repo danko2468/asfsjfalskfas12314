@@ -1,25 +1,23 @@
 import cors from "@fastify/cors";
 import Fastify from "fastify";
-import qs from "qs";
 
-import { useAuth } from "~/ports/auth/hooks.ts";
 import { useErrorHandler } from "~/ports/error/error.handler.ts";
-import { addHealthRoutes } from "~/ports/health/health.controller.ts";
+import addHealthRoutes from "~/ports/health/health.controller.ts";
+import addTodoRoutes from "~/ports/todo/todo.controller.ts";
+import { TodoDtoJsonSchema } from "~/ports/todo/todo.dto.json-schema.ts";
+import { TodoUpsertDtoJsonSchema } from "~/ports/todo/todo.upsert.dto.json-schema.ts";
 import { useSwagger } from "~/utils/swagger/hooks.ts";
 
-const app = Fastify({ logger: true, querystringParser: (str) => qs.parse(str, { comma: true }) });
+const app = Fastify({ logger: true });
 
 await app.register(cors);
 await useErrorHandler(app);
 await useSwagger(app);
 
-addHealthRoutes(app);
+app.addSchema(TodoDtoJsonSchema);
+app.addSchema(TodoUpsertDtoJsonSchema);
 
-// app.register(
-//   useAuth((childServer) => {
-//     addTomicaReservationRoutes(childServer);
-//     addTomicaRoutes(childServer);
-//   })
-// );
+addHealthRoutes(app);
+addTodoRoutes(app);
 
 export default app;

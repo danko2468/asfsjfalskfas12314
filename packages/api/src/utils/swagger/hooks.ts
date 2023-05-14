@@ -18,15 +18,6 @@ export async function useSwagger(server: FastifyInstance) {
       },
       servers: [{ url: "http://localhost:3000", description: "LOCAL" }],
       tags: [{ name: "Todo" }, { name: "Others" }],
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-          },
-        },
-      },
     },
   });
 }
