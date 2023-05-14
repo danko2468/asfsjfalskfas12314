@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "declaration": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "nodenext",
+    "target": "ES2021",
+    "lib": ["ESNext"],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": false,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  }
+}
