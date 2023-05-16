@@ -1,0 +1,22 @@
+# FOR LOCAL DEVELOPMENT ONLY
+version: "3.9"
+
+services:
+  db:
+    image: mongo
+    networks:
+      - todo_network
+    ports:
+      - 27017:27017
+    volumes:
+      - monogo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: todo
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+
+volumes:
+  monogo_data:
+
+networks:
+  todo_network:
