@@ -10,10 +10,6 @@ services:
       - 27017:27017
     volumes:
       - monogo_data:/data/db
-    environment:
-      MONGO_INITDB_DATABASE: todo
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: toor
 
 volumes:
   monogo_data:

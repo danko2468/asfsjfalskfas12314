@@ -8,7 +8,7 @@ export async function useErrorHandler(fastify: FastifyInstance) {
     request.log.error(error, `This error has status code ${statusCode}`);
     reply.status(statusCode).send({
       statusCode: statusCode,
-      message: error.cause,
+      message: error.message,
     });
   });
 }

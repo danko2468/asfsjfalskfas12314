@@ -1,4 +1,4 @@
-FROM node:19-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -13,4 +13,3 @@ RUN npm install --omit=dev
 VOLUME [ "/app/.next" ]
 
 CMD ["node", "server.js"]
-

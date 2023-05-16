@@ -5,8 +5,8 @@ export const TodoDtoJsonSchema = {
     id: { type: "string" },
     title: { type: "string" },
     description: { type: "string" },
-    createdAt: { type: "string", format: "date-time" },
-    updatedAt: { type: "string", format: "date-time" },
+    createdAt: { type: "string" },
+    updatedAt: { type: "string" },
   },
   required: ["id", "title", "createdAt", "updatedAt"],
 };

@@ -1,4 +1,5 @@
 import { TodoNotFoundError, TodoUnknownError } from "~/services/todo/todo.errors.ts";
+import { useLogger, getLogger } from "~/utils/logger/mod.ts";
 
 import { convertTodoDocument, convertTodoEntity } from "./todo.schema.converters.ts";
 import TodoModel from "./todo.schema.ts";
@@ -7,7 +8,12 @@ import type { TodoDocument } from "./todo.schema.ts";
 import type { TodoEntity } from "~/services/todo/todo.entity.ts";
 import type { TodoFilterDto } from "~/services/todo/todo.filter.dto.ts";
 
+const logger = getLogger("TodoRepository");
+
 export async function createTodoEntity(val: TodoEntity): Promise<TodoEntity> {
+  const { logArgs } = useLogger(logger, createTodoEntity.name);
+  logArgs(val);
+
   try {
     const todo = await TodoModel.create(convertTodoEntity(val));
     return convertTodoDocument(todo);
@@ -17,6 +23,8 @@ export async function createTodoEntity(val: TodoEntity): Promise<TodoEntity> {
 }
 
 export async function updateTodoEntity(val: TodoEntity): Promise<void> {
+  const { logArgs } = useLogger(logger, updateTodoEntity.name);
+  logArgs(val);
   try {
     const result = await TodoModel.updateOne({ _id: val.id }, convertTodoEntity(val));
     if (result.matchedCount === 0) {
@@ -29,6 +37,8 @@ export async function updateTodoEntity(val: TodoEntity): Promise<void> {
 }
 
 export async function deleteTodoEntityById(id: string): Promise<void> {
+  const { logArgs } = useLogger(logger, deleteTodoEntityById.name);
+  logArgs(id);
   try {
     const result = await TodoModel.updateOne({ _id: id }, { deletedAt: new Date() });
     if (result.matchedCount === 0) {
@@ -41,6 +51,8 @@ export async function deleteTodoEntityById(id: string): Promise<void> {
 }
 
 export async function recoverTodoEntityById(id: string): Promise<void> {
+  const { logArgs } = useLogger(logger, recoverTodoEntityById.name);
+  logArgs(id);
   try {
     const result = await TodoModel.updateOne({ _id: id }, { deletedAt: null });
     if (result.matchedCount === 0) {
@@ -53,6 +65,8 @@ export async function recoverTodoEntityById(id: string): Promise<void> {
 }
 
 export async function getTodoEntityById(id: string): Promise<TodoEntity> {
+  const { logArgs } = useLogger(logger, getTodoEntityById.name);
+  logArgs(id);
   try {
     const doc = await TodoModel.findById(id).lean();
     if (!doc || doc.deletedAt) throw new TodoNotFoundError(`Todo with id ${id} not found`);
@@ -64,6 +78,9 @@ export async function getTodoEntityById(id: string): Promise<TodoEntity> {
 }
 
 export async function getDeletedTodoEntityList(): Promise<TodoEntity[]> {
+  const { logArgs } = useLogger(logger, getDeletedTodoEntityList.name);
+  logArgs();
+
   try {
     const docList = await TodoModel.find({ deletedAt: { $ne: null } }).lean();
     return docList.map(convertTodoDocument);
@@ -73,6 +90,8 @@ export async function getDeletedTodoEntityList(): Promise<TodoEntity[]> {
 }
 
 export async function countTodoEntityByFilter(val: TodoFilterDto) {
+  const { logArgs } = useLogger(logger, countTodoEntityByFilter.name);
+  logArgs(val);
   try {
     return await TodoModel.countDocuments({
       deletedAt: null,
@@ -89,6 +108,9 @@ export async function countTodoEntityByFilter(val: TodoFilterDto) {
 }
 
 export async function getTodoEntityListByFilter(val: TodoFilterDto): Promise<TodoEntity[]> {
+  const { logArgs } = useLogger(logger, getTodoEntityListByFilter.name);
+  logArgs(val);
+
   let result: TodoDocument[];
   try {
     result = await TodoModel.aggregate<TodoDocument>([

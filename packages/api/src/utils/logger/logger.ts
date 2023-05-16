@@ -2,23 +2,28 @@ import { pino } from "pino";
 
 import config from "~/config.ts";
 
+const debugMode = config.NODE_ENV !== "production";
+
 export class Logger {
-  private readonly debugMode = config.NODE_ENV !== "production";
   private readonly logger: pino.Logger;
 
   constructor(context: string) {
     this.logger = pino().child({ context });
+    this.log = this.log.bind(this);
+    this.info = this.info.bind(this);
+    this.error = this.error.bind(this);
+    this.warn = this.warn.bind(this);
   }
 
   log(message: any, ...optionalParams: any[]) {
-    if (this.debugMode) {
-      this.logger.debug(message, ...optionalParams);
+    if (debugMode) {
+      this.logger.info(message, ...optionalParams);
     }
   }
 
   info(message: any, ...optionalParams: any[]) {
-    if (this.debugMode) {
-      this.logger.debug(message, ...optionalParams);
+    if (debugMode) {
+      this.logger.info(message, ...optionalParams);
     }
   }
   error(message: any, ...optionalParams: any[]) {
@@ -26,7 +31,7 @@ export class Logger {
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    if (this.debugMode) {
+    if (debugMode) {
       this.logger.warn(message, ...optionalParams);
     }
   }

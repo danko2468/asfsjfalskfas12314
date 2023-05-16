@@ -21,16 +21,16 @@ export const GetTodoList = {
   },
   response: {
     200: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
+      type: "object",
+      properties: {
+        items: {
+          type: "array",
           items: {
             $ref: "TodoDto#",
           },
-          pagination: {
-            $ref: "PaginationDto#",
-          },
+        },
+        pagination: {
+          $ref: "PaginationDto#",
         },
       },
     },

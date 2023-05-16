@@ -12,14 +12,14 @@ import { useSwagger } from "~/utils/swagger/hooks.ts";
 
 const app = Fastify({ logger: true });
 
-await app.register(cors);
-await useErrorHandler(app);
-await useSwagger(app);
-
 app.addSchema(TodoDtoJsonSchema);
 app.addSchema(TodoUpsertDtoJsonSchema);
 app.addSchema(TodoFilterDtoJsonSchema);
 app.addSchema(PaginationDtoJsonSchmea);
+
+await app.register(cors);
+await useErrorHandler(app);
+await useSwagger(app);
 
 addHealthRoutes(app);
 addTodoRoutes(app);
