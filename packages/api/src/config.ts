@@ -6,7 +6,6 @@ const PACKAGE_VERSION = process.env.npm_package_version;
 const schema = yup.object().shape({
   NODE_ENV: yup.string().default("development"),
   PACKAGE_VERSION: yup.string().default("0.0.0"),
-  JWT_SECRET: yup.string().required(),
   PORT: yup.number().default(3000),
   MONGO_PROTOCOL: yup.string().required(),
   MONGO_USER: yup.string().optional(),
@@ -23,7 +22,6 @@ try {
       NODE_ENV: process.env.NODE_ENV,
       PACKAGE_VERSION,
       PORT: process.env.PORT,
-      JWT_SECRET: process.env.JWT_SECRET,
       MONGO_PROTOCOL: process.env.MONGO_PROTOCOL,
       MONGO_USER: process.env.MONGO_USER,
       MONGO_PASSWORD: process.env.MONGO_PASSWORD,

@@ -12,7 +12,8 @@
     "start": "node dist/main.js",
     "test": "jest --passWithNoTests",
     "predeploy": "functionpack -d dist -p package.json --zip",
-    "doc:swagger": "NODE_ENV=development APP_SWAGGER=true rollup -c && node --enable-source-maps ./dist/swagger.js"
+    "doc:swagger": "NODE_ENV=development APP_SWAGGER=true rollup -c && node --enable-source-maps ./dist/swagger.js",
+    "doc": "typedoc"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.1",
@@ -51,6 +52,7 @@
     "semver": "7.4.0",
     "serverless-function-packer": "^1.0.1",
     "supertest": "^6.3.3",
+    "typedoc": "^0.24.7",
     "typescript": "^5.0.4"
   },
   "engines": {

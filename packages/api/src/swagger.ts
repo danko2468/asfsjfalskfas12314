@@ -5,7 +5,7 @@ import server from "./app.ts";
 
 console.time("swagger.json generated");
 
-const outDir = fileURLToPath(new URL("../dist", import.meta.url));
+const outDir = fileURLToPath(new URL("../doc", import.meta.url));
 
 await server.ready();
 const json = (server as any).swagger();

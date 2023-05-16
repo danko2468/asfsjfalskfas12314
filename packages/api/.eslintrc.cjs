@@ -25,7 +25,7 @@ module.exports = {
       node: true,
     },
   },
-  ignorePatterns: ["dist", "jest*.js", ".eslintrc.cjs"],
+  ignorePatterns: ["dist", "jest*.js", ".eslintrc.cjs", "typedoc.config.cjs"],
   rules: {
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

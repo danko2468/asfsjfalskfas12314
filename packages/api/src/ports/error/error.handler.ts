@@ -6,6 +6,9 @@ export async function useErrorHandler(fastify: FastifyInstance) {
     const statusCode = (error as unknown as HttpError)?.status || 500;
 
     request.log.error(error, `This error has status code ${statusCode}`);
-    reply.status(statusCode).send(error);
+    reply.status(statusCode).send({
+      statusCode: statusCode,
+      message: error.cause,
+    });
   });
 }
