@@ -5,7 +5,7 @@
 html {
   font-size: 14px;
   line-height: 16px;
-  @apply bg-neutral-400 text-slate-950;
+  @apply bg-neutral-50 text-slate-950;
 }
 
 body {
@@ -35,6 +35,10 @@ main button:disabled {
   @apply cursor-not-allowed border-gray-700 text-gray-700 hover:border-gray-700 hover:text-gray-700;
 }
 
+main .app_text {
+  @apply text-neutral-900;
+}
+
 @media screen and (min-width: 768px) {
   html {
     font-size: 16px;
@@ -59,5 +63,9 @@ main button:disabled {
 
   main button {
     @apply border-neutral-400 text-neutral-400 hover:border-neutral-300 hover:text-neutral-300;
+  }
+
+  main .app_text {
+    @apply text-neutral-300;
   }
 }

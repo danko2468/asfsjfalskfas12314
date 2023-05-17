@@ -3,7 +3,6 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import { AppLayer } from "~/components/AppLayer/mod";
-import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Todo",
@@ -15,7 +14,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <AppLayer>{children}</AppLayer>
-        <ToastContainer />
       </body>
     </html>
   );

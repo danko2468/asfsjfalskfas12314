@@ -10,6 +10,7 @@ type Props = {
   defaultValue?: Pick<TodoDto, "title" | "description">;
   onSubmit: (data: Pick<TodoDto, "title" | "description">) => void | Promise<void>;
   className?: string;
+  fullHeight?: boolean;
 };
 
 const schema = yup.object({
@@ -17,7 +18,7 @@ const schema = yup.object({
   description: yup.string().optional(),
 });
 
-export function TodoForm({ defaultValue, onSubmit, className }: PropsWithoutRef<Props>) {
+export function TodoForm({ defaultValue, onSubmit, className, fullHeight }: PropsWithoutRef<Props>) {
   const {
     register,
     handleSubmit,
@@ -42,18 +43,19 @@ export function TodoForm({ defaultValue, onSubmit, className }: PropsWithoutRef<
   return (
     <form
       className={clsx(
-        "mx-auto flex h-full w-full max-w-[700px] flex-col items-center justify-center p-4",
+        "mx-auto flex w-full max-w-[700px] flex-col items-center justify-center p-4",
+        fullHeight && "h-full",
         className
       )}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="mb-12 w-full px-4">
-        <div className="mb-6 text-3xl text-neutral-300">Title *</div>
+        <div className="app_text mb-6 text-3xl">Title *</div>
         <input {...register("title")} placeholder="What is it?" />
         {errors.title && <div className="text-red-800">{errors.title.message}</div>}
       </div>
       <div className="w-full px-4">
-        <div className="mb-6 text-3xl text-neutral-300">Description</div>
+        <div className="app_text mb-6 text-3xl">Description</div>
         <textarea {...register("description")} placeholder="For more information, e.g. address, link" />
         {errors.description && <div className="text-red-800">{errors.description.message}</div>}
       </div>

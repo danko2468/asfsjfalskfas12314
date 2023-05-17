@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 import type { TodoDto } from "../types";
 
 export function parseTodoResponse(
@@ -7,7 +9,7 @@ export function parseTodoResponse(
     id: data.id,
     title: data.title,
     description: data.description,
-    createdAt: new Date(data.createdAt),
-    updatedAt: new Date(data.updatedAt),
+    createdAt: DateTime.fromISO(data.createdAt),
+    updatedAt: DateTime.fromISO(data.updatedAt),
   } as TodoDto;
 }

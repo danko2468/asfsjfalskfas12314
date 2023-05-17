@@ -1,10 +1,11 @@
+"use client";
 import { useContext } from "react";
 
 import { AppContext } from "~/components/AppLayer/mod";
 
 import { NewTodo } from "./NewTodo";
+import { TodoBlank } from "./TodoBlank";
 import { TodoDetail } from "./TodoDetail";
-import { TodoDetailBlank } from "./TodoDetailBlank";
 
 export function TodoDetailWrapper() {
   const { id, setId } = useContext(AppContext);
@@ -15,7 +16,7 @@ export function TodoDetailWrapper() {
 
   return (
     <div className="h-full border-l border-neutral-500">
-      {id ? id === "create" ? <NewTodo /> : <TodoDetail id={id} /> : <TodoDetailBlank onCreate={onCreate} />}
+      {id ? id === "create" ? <NewTodo /> : <TodoDetail id={id} /> : <TodoBlank onCreate={onCreate} />}
     </div>
   );
 }

@@ -1,7 +1,9 @@
+"use client";
 import { useContext } from "react";
 import { toast } from "react-toastify";
 
 import { AppContext } from "~/components/AppLayer/mod";
+import { IcArrowBack } from "~/icons/IcArrowBack";
 import { createTodo } from "~/lib/apis/createTodo";
 
 import { TodoForm } from "./TodoForm";
@@ -19,5 +21,19 @@ export function NewTodo() {
     }
   };
 
-  return <TodoForm onSubmit={onSubmit} />;
+  const onCancel = () => {
+    setId(null);
+  };
+
+  return (
+    <div className="h-full">
+      <div className="flex h-[64px] items-center justify-start px-4 pt-4">
+        <button className="mx-0 w-[120px] border-none" onClick={onCancel}>
+          <IcArrowBack />
+          <span>Cancel</span>
+        </button>
+      </div>
+      <TodoForm onSubmit={onSubmit} className="h-[calc(100%-64px)]" />
+    </div>
+  );
 }

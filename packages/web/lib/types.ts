@@ -1,9 +1,11 @@
+import type { DateTime } from "luxon";
+
 export type TodoDto = {
   id: string;
   title: string;
   description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
 };
 
 export type PaginationDto = {

@@ -4,7 +4,7 @@ type Props = {
   onCreate: () => void;
 };
 
-export function TodoDetailBlank({ onCreate }: PropsWithoutRef<Props>) {
+export function TodoBlank({ onCreate }: PropsWithoutRef<Props>) {
   return (
     <div className="flex h-full flex-col items-center justify-center text-2xl">
       <p>
