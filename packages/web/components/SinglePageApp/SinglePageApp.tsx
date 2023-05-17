@@ -10,7 +10,7 @@ import { DeviceType } from "~/lib/Screen/constants";
 Settings.defaultLocale = "en-GB";
 
 export function SinglePageApp() {
-  const { deviceType, id, setId } = useContext(AppContext);
+  const { deviceType, id } = useContext(AppContext);
 
   return (
     <>

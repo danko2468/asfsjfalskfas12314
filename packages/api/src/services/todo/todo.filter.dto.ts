@@ -5,6 +5,7 @@ export type TodoFilterDto = {
   pageSize: number;
   keywords?: string;
   sortOrder: "asc" | "desc";
+  archived?: boolean;
 };
 
 export const TodoFilterDtoSchema = yup.object().shape({
@@ -12,4 +13,5 @@ export const TodoFilterDtoSchema = yup.object().shape({
   pageSize: yup.number().required(),
   keywords: yup.string().optional(),
   sortOrder: yup.string().oneOf(["asc", "desc"]).required(),
+  archived: yup.boolean().optional(),
 });

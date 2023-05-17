@@ -1,4 +1,5 @@
 import { apiUrl } from "./constants";
+import { throwIfResponseNotOk } from "./response";
 
 import type { TodoDto } from "~/lib/types";
 
@@ -11,6 +12,8 @@ export async function createTodo(title: string, description?: string) {
     },
     body: JSON.stringify({ title, description }),
   });
+
+  await throwIfResponseNotOk(response);
 
   return (await response.json()) as TodoDto;
 }

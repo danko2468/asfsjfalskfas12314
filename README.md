@@ -36,3 +36,11 @@ yarn workspace api doc:swagger
 ```
 
 A `swagger.json` file will be generated in `packages/api/doc` folder.
+
+### Run operations scripts
+
+Please make sure `deno` is installed on your machine.
+
+```bash
+deno run -A ./operations/create_mongo_index.ts
+```

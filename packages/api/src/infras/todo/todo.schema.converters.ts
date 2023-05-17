@@ -9,6 +9,7 @@ export function convertTodoDocument(val: TodoDocument): TodoEntity {
     description: val.description,
     createdAt: val.createdAt,
     updatedAt: val.updatedAt,
+    deletedAt: val.deletedAt,
   };
 }
 

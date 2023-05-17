@@ -12,6 +12,7 @@ type Props = {
   onSubmit: (data: Pick<TodoDto, "title" | "description">) => void | Promise<void>;
   className?: string;
   fullHeight?: boolean;
+  disabled?: boolean;
 };
 
 const schema = yup.object({

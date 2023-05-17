@@ -9,6 +9,7 @@ export function convertTodoEntity(val: TodoEntity): TodoDto {
     createdAt: val.createdAt!.toISOString(),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     updatedAt: val.updatedAt!.toISOString(),
+    ...(val.deletedAt && { deletedAt: val.deletedAt.toISOString() }),
     title: val.title,
     description: val.description,
   };

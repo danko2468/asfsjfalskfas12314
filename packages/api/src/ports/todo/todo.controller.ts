@@ -12,7 +12,6 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type { TodoEntity } from "~/services/todo/todo.entity.ts";
 
 export default (fastify: FastifyInstance) => {
-  fastify.get("/todos/archieved", { schema: ControllerSchema.GetDeletedTodoList }, getDeletedTodoList);
   fastify.get("/todos/:id", { schema: ControllerSchema.GetTodoById }, getTodoById);
   fastify.put("/todos/:id", { schema: ControllerSchema.UpdateTodo }, updateTodo);
   fastify.delete("/todos/:id", { schema: ControllerSchema.DeleteTodo }, deleteTodo);
@@ -38,11 +37,13 @@ export async function getTodoList(req: FastifyRequest) {
     page = 0,
     pageSize = 24,
     sortOrder = "asc",
+    archived,
     keywords,
   } = req.query as {
     keywords?: string;
     page?: number;
     pageSize?: number;
+    archived?: boolean;
     sortOrder?: "asc" | "desc";
   };
 
@@ -51,6 +52,7 @@ export async function getTodoList(req: FastifyRequest) {
     page,
     pageSize,
     sortOrder,
+    archived,
   };
 
   try {
@@ -90,15 +92,6 @@ export async function recoverTodo(req: FastifyRequest, reply: FastifyReply) {
   }
 
   return reply.status(204).send(null);
-}
-
-export async function getDeletedTodoList() {
-  try {
-    const list = await TodoService.getDeletedTodoEntityList();
-    return list.map(convertTodoEntity);
-  } catch (error) {
-    throw createError.InternalServerError(error.message);
-  }
 }
 
 export async function createTodo(req: FastifyRequest, reply: FastifyReply) {

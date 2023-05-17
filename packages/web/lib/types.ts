@@ -6,6 +6,7 @@ export type TodoDto = {
   description?: string;
   createdAt: DateTime;
   updatedAt: DateTime;
+  deletedAt?: DateTime;
 };
 
 export type PaginationDto = {

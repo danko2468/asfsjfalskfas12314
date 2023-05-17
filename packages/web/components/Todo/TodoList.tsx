@@ -5,24 +5,24 @@ import { useState, useMemo, useContext } from "react";
 import useSWR from "swr";
 
 import { AppContext } from "~/components/AppLayer/mod";
-import { IcChevronLeft } from "~/icons/IcChevronLeft";
-import { IcChevronRight } from "~/icons/IcChevronRight";
-import { IcFirstPage } from "~/icons/IcFirstPage";
+import { EnhancedTextInput } from "~/components/Input/EnhancedTextInput";
+import { Nav } from "~/components/Nav/mod";
+import { Pagination } from "~/components/Pagination/mod";
 import { IcFolderDelete } from "~/icons/IcFolderDelete";
-import { IcLastPage } from "~/icons/IcLastPage";
-import { IcListAltAdd } from "~/icons/IcListAltAdd";
+import { IcSearch } from "~/icons/IcSearch";
 import { IcSort } from "~/icons/IcSort";
-import { DeviceType } from "~/lib/Screen/constants";
 import { parseTodoResponse } from "~/lib/apis/response";
 import { getSwrFetcher } from "~/lib/apis/swrFetcher";
 
-import { TodoBlank } from "./TodoBlank";
 import { TodoItem } from "./TodoItem";
+
+import styles from "./TodoList.module.css";
 
 import type { TodoDto, PaginationDto } from "~/lib/types";
 
 export function TodoList() {
-  const { deviceType, setId } = useContext(AppContext);
+  const { setId } = useContext(AppContext);
+  const [archived, toggleArchived] = useState(false);
   const [currentPage, setPage] = useState<number>(0);
   const [keywords, setKeyword] = useState("");
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("asc");
@@ -30,11 +30,12 @@ export function TodoList() {
     const search = new URLSearchParams({
       page: `${currentPage}`,
       ...(keywords && { keywords }),
+      ...(typeof archived === "boolean" && { archived: `${archived}` }),
       sortOrder,
-      pageSize: `${12}`,
+      pageSize: `${10}`,
     });
     return search.toString();
-  }, [keywords, currentPage, sortOrder]);
+  }, [keywords, currentPage, sortOrder, archived]);
 
   const { data, error } = useSWR<{ items: TodoDto[]; pagination: PaginationDto }>(
     `/todos?${queryString}`,
@@ -45,95 +46,58 @@ export function TodoList() {
   const { items, pagination } = data ?? {};
   const loading = useMemo(() => !data && !error, [data, error]);
 
-  const isFirstPage = useMemo(() => (pagination?.page ?? 0) === 0, [pagination?.page]);
-  const hasPrevPage = useMemo(() => (pagination?.page ?? 0) > 0, [pagination?.page]);
-  const hasNextPage = useMemo(
-    () => (pagination?.page ?? 0) < (pagination?.totalPages ?? 1) - 1,
-    [pagination?.page, pagination?.totalPages]
-  );
-  const isLastPage = useMemo(
-    () => (pagination?.page ?? 0) === (pagination?.totalPages ?? 1) - 1,
-    [pagination?.page, pagination?.totalPages]
-  );
-
-  const onFisrtPageClick = () => {
-    if (!pagination) return;
+  const onKeywordsChange = (val: string) => {
+    setKeyword(val);
     setPage(0);
-  };
-
-  const onNextPageClick = () => {
-    if (!pagination) return;
-    const nextPage = pagination.page + 1;
-    setPage(nextPage);
-  };
-
-  const onPrevPageClick = () => {
-    if (!pagination) return;
-    const prevPage = pagination.page - 1;
-    setPage(prevPage);
-  };
-
-  const onLastPageClick = () => {
-    if (!pagination) return;
-    const lastPage = pagination.totalPages - 1;
-    setPage(lastPage);
   };
 
   return (
     <>
-      <div className="flex h-[64px] items-center px-2">
-        <IcListAltAdd width={30} height={30} className="app_text clickable" onClick={() => setId("create")} />
-      </div>
+      <Nav onCreateTodoClick={() => setId("create")} onHomeClick={() => setId(null)} />
       <div className="h-[calc(100%-128px)]">
         {loading ? (
           <></>
-        ) : items && items.length > 0 ? (
-          <ul className="h-full list-none overflow-y-auto border-t">
-            <li className="flex items-center justify-between px-2 py-4">
-              <button
-                className="mx-0 h-[30px] w-[180px] justify-start border-0 p-0 px-1 text-base"
-                onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
-              >
-                <IcSort className="mr-2" />
-                Create Date {sortOrder.toUpperCase()}
-              </button>
-              <button className="mx-0 h-[30px] w-[145px] justify-end p-0 px-1 text-base">
-                <IcFolderDelete className="mr-2" />
-                View Archived
-              </button>
-            </li>
-            {items.map((v) => (
-              <TodoItem key={v.id} {...v} onClick={() => setId(v.id)} />
-            ))}
-          </ul>
-        ) : deviceType === DeviceType.Mobile ? (
-          <TodoBlank onCreate={() => setId("create")} />
         ) : (
-          <>No Todo item</>
+          items && (
+            <ul className="h-full list-none overflow-y-auto border-t">
+              <li className="flex items-center justify-between px-4 py-4">
+                <IcSearch width={30} height={30} className="app_text mr-4" />
+                <EnhancedTextInput
+                  placeholder="Search TODO keywords"
+                  value={keywords}
+                  onChange={onKeywordsChange}
+                />
+              </li>
+              <li className="flex items-center justify-between px-2 py-4">
+                <button
+                  className="mx-0 h-[30px] w-[180px] justify-start border-0 p-0 px-1 text-base"
+                  onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
+                >
+                  <IcSort className="mr-2" />
+                  Create Date {sortOrder.toUpperCase()}
+                </button>
+                <button
+                  className={clsx(
+                    "mx-0 h-[30px] w-[130px] justify-end p-0 px-1 text-base",
+                    archived && styles.isViewingArchived
+                  )}
+                  onClick={() => toggleArchived((prev) => !prev)}
+                >
+                  <IcFolderDelete className="mr-2" />
+                  <span className="text-sm">View Archived</span>
+                </button>
+              </li>
+              {items.length > 0 ? (
+                items.map((v) => <TodoItem key={v.id} {...v} onClick={() => setId(v.id)} />)
+              ) : (
+                <li className="app_text disabled flex cursor-pointer items-center px-4 py-5">No Todo item</li>
+              )}
+            </ul>
+          )
         )}
       </div>
       <div className="flex h-[64px] items-center justify-center">
-        {pagination && (
-          <>
-            <IcFirstPage
-              className={clsx("app_text cursor-pointer", isFirstPage && "disabled")}
-              onClick={isFirstPage ? undefined : onFisrtPageClick}
-            />
-            <IcChevronLeft
-              className={clsx("app_text cursor-pointer", !hasPrevPage && "disabled")}
-              onClick={hasPrevPage ? onPrevPageClick : undefined}
-            />
-            <span className="app_text px-4">{`${pagination.page + 1} / ${pagination.totalPages}`}</span>
-            <IcChevronRight
-              className={clsx("app_text cursor-pointer", !hasNextPage && "disabled")}
-              onClick={hasNextPage ? onNextPageClick : undefined}
-            />
-            <IcLastPage
-              className={clsx("app_text cursor-pointer", isLastPage && "disabled")}
-              onClick={isLastPage ? undefined : onLastPageClick}
-            />
-          </>
-        )}
+        {pagination && <Pagination {...pagination} setPage={setPage} />}
       </div>
     </>
   );

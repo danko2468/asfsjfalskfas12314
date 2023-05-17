@@ -37,18 +37,6 @@ export const GetTodoList = {
   },
 };
 
-export const GetDeletedTodoList = {
-  tags: ["Todo"],
-  response: {
-    200: {
-      type: "array",
-      items: {
-        $ref: "TodoDto#",
-      },
-    },
-  },
-};
-
 export const CreateTodo = {
   tags: ["Todo"],
   body: {

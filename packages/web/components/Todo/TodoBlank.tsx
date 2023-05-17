@@ -12,7 +12,7 @@ export function TodoBlank({ onCreate }: PropsWithoutRef<Props>) {
       </p>
       <p>
         <span>{"Let's "}</span>
-        <span className="cursor-pointer font-bold hover:text-neutral-200 hover:underline" onClick={onCreate}>
+        <span className="cursor-pointer font-bold underline hover:text-neutral-200" onClick={onCreate}>
           create
         </span>
         <span>{" your first todo item."}</span>

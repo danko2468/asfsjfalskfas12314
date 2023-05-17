@@ -61,13 +61,6 @@ export async function getTodoEntityById(id: string): Promise<TodoEntity> {
   return TodoRepo.getTodoEntityById(id);
 }
 
-export async function getDeletedTodoEntityList(): Promise<TodoEntity[]> {
-  const { logArgs } = useLogger(logger, getDeletedTodoEntityList.name);
-  logArgs();
-
-  return TodoRepo.getDeletedTodoEntityList();
-}
-
 export async function getTodoEntityListByFilter(val: TodoFilterDto) {
   const { logArgs } = useLogger(logger, getTodoEntityListByFilter.name);
   logArgs(val);

@@ -1,0 +1,3 @@
+.isViewingArchived {
+  @apply bg-slate-400 text-neutral-600 !important;
+}

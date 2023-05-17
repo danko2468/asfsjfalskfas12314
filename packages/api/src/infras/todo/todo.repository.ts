@@ -69,22 +69,10 @@ export async function getTodoEntityById(id: string): Promise<TodoEntity> {
   logArgs(id);
   try {
     const doc = await TodoModel.findById(id).lean();
-    if (!doc || doc.deletedAt) throw new TodoNotFoundError(`Todo with id ${id} not found`);
+    if (!doc) throw new TodoNotFoundError(`Todo with id ${id} not found`);
     return convertTodoDocument(doc);
   } catch (error) {
     if (error instanceof TodoNotFoundError) throw error;
-    throw new TodoUnknownError(error.message);
-  }
-}
-
-export async function getDeletedTodoEntityList(): Promise<TodoEntity[]> {
-  const { logArgs } = useLogger(logger, getDeletedTodoEntityList.name);
-  logArgs();
-
-  try {
-    const docList = await TodoModel.find({ deletedAt: { $ne: null } }).lean();
-    return docList.map(convertTodoDocument);
-  } catch (error) {
     throw new TodoUnknownError(error.message);
   }
 }
@@ -116,7 +104,7 @@ export async function getTodoEntityListByFilter(val: TodoFilterDto): Promise<Tod
     result = await TodoModel.aggregate<TodoDocument>([
       {
         $match: {
-          deletedAt: null,
+          deletedAt: val.archived ? { $ne: null } : null,
           ...(val.keywords && {
             $or: [
               { title: { $regex: val.keywords, $options: "i" } },

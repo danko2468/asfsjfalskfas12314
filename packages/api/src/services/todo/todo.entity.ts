@@ -6,6 +6,7 @@ export type TodoEntity = {
   description?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  deletedAt?: Date;
 };
 
 export const TodoSchema = yup.object().shape({
@@ -14,4 +15,5 @@ export const TodoSchema = yup.object().shape({
   description: yup.string().optional(),
   createdAt: yup.date().optional(),
   updatedAt: yup.date().optional(),
+  deletedAt: yup.date().optional(),
 });

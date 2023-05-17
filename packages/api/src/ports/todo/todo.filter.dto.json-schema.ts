@@ -6,5 +6,6 @@ export const TodoFilterDtoJsonSchema = {
     pageSize: { type: "number" },
     keywords: { type: "string" },
     sortOrder: { type: "string", enum: ["asc", "desc"] },
+    archived: { type: "boolean" },
   },
 };

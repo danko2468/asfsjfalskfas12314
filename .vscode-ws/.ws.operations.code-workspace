@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "path": "../operations/"
+    }
+  ],
+  "settings": {
+    "deno.lint": true,
+    "deno.enable": true,
+    "deno.unstable": true,
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
+}
