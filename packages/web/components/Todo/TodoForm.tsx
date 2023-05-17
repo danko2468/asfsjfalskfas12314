@@ -1,9 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import clsx from "clsx";
-import { PropsWithoutRef, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
+import type { PropsWithoutRef } from "react";
 import type { TodoDto } from "~/lib/types";
 
 type Props = {
@@ -24,6 +25,7 @@ export function TodoForm({ defaultValue, onSubmit, className, fullHeight }: Prop
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
     reValidateMode: "onChange",
@@ -39,6 +41,12 @@ export function TodoForm({ defaultValue, onSubmit, className, fullHeight }: Prop
     () => !!(!title || errors.description || errors.title),
     [title, errors.title, errors.description]
   );
+
+  useEffect(() => {
+    if (!defaultValue) return;
+    setValue("title", defaultValue.title);
+    setValue("description", defaultValue.description);
+  }, [defaultValue, setValue]);
 
   return (
     <form

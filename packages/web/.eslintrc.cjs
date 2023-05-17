@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   extends: ["next/core-web-vitals", "plugin:import/recommended", "plugin:import/typescript", "prettier"],
   ignorePatterns: [
-    ".eslintrc.js",
+    ".eslintrc.cjs",
     "jest*.js",
     "jest*.ts",
     "next*.config.js",

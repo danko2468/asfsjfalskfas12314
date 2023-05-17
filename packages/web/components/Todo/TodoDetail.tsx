@@ -5,7 +5,9 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 
 import { AppContext } from "~/components/AppLayer/mod";
+import { IcArrowBack } from "~/icons/IcArrowBack";
 import { IcDelete } from "~/icons/IcDelete";
+import { DeviceType } from "~/lib/Screen/constants";
 import { deleteTodo } from "~/lib/apis/deleteTodo";
 import { parseTodoResponse } from "~/lib/apis/response";
 import { getSwrFetcher } from "~/lib/apis/swrFetcher";
@@ -21,8 +23,8 @@ type Props = {
 };
 
 export function TodoDetail({ id }: PropsWithoutRef<Props>) {
-  const { setId } = useContext(AppContext);
-  const { data, error, mutate } = useSWR<TodoDto>(`/todos/${id}`, getSwrFetcher(parseTodoResponse));
+  const { setId, deviceType } = useContext(AppContext);
+  const { data, error, mutate } = useSWR<TodoDto>(() => `/todos/${id}`, getSwrFetcher(parseTodoResponse));
 
   const loading = useMemo(() => !data && !error, [data, error]);
 
@@ -34,6 +36,10 @@ export function TodoDetail({ id }: PropsWithoutRef<Props>) {
     } catch (error) {
       toast.error((error as Error).message);
     }
+  };
+
+  const onCancel = () => {
+    setId(null);
   };
 
   const onDelete = async () => {
@@ -53,6 +59,12 @@ export function TodoDetail({ id }: PropsWithoutRef<Props>) {
       ) : (
         <>
           <div className="flex h-[64px] items-center justify-end px-4 pt-4">
+            {deviceType === DeviceType.Mobile && (
+              <button className="mx-0 w-[120px] border-none" onClick={onCancel}>
+                <IcArrowBack />
+                <span>Cancel</span>
+              </button>
+            )}
             <button className="w-[120px]" onClick={onDelete}>
               <IcDelete className="mr-1" />
               <span>Delete</span>

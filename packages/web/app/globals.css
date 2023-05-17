@@ -39,6 +39,14 @@ main .app_text {
   @apply text-neutral-900;
 }
 
+main .app_text.clickable {
+  @apply cursor-pointer hover:text-neutral-800;
+}
+
+main .app_text.disabled {
+  @apply cursor-not-allowed text-gray-600;
+}
+
 @media screen and (min-width: 768px) {
   html {
     font-size: 16px;
@@ -67,5 +75,9 @@ main .app_text {
 
   main .app_text {
     @apply text-neutral-300;
+  }
+
+  main .app_text.clickable:hover {
+    @apply text-neutral-100;
   }
 }
