@@ -10,6 +10,4 @@ COPY .next/static ./.next/static
 
 RUN npm install --omit=dev
 
-VOLUME [ "/app/.next" ]
-
 CMD ["node", "server.js"]

@@ -6,7 +6,7 @@ import config from "~/config.ts";
 import server from "./app.ts";
 
 try {
-  await server.listen({ port: config.PORT });
+  await server.listen({ port: config.PORT, host: "0.0.0.0" });
 
   const address = server.server.address();
   const port = typeof address === "string" ? address : address?.port;

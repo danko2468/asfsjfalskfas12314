@@ -9,4 +9,3 @@ RUN npm install --omit=dev
 COPY dist dist
 
 CMD ["npm", "start"]
-

@@ -10,6 +10,27 @@ services:
       - 27017:27017
     volumes:
       - monogo_data:/data/db
+  api:
+    image: todo_api:latest
+    networks:
+      - todo_network
+    ports:
+      - 3310:3310
+    environment:
+      - NODE_ENV=production
+      - MONGO_PROTOCOL=mongodb
+      - MONGO_HOST=db:27017
+      - MONGO_DB_NAME=todo
+    depends_on:
+      - db
+  web:
+    image: todo_web:latest
+    networks:
+      - todo_network
+    ports:
+      - 3000:3000
+    # depends_on:
+    #   - api
 
 volumes:
   monogo_data:

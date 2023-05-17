@@ -1,3 +1,5 @@
+const path = require("node:path");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   crossOrigin: "anonymous",
@@ -17,6 +19,9 @@ const nextConfig = {
       },
     ],
   }),
+  experimental: {
+    outputFileTracingRoot: path.resolve(__dirname, "./"),
+  },
 };
 
 module.exports = nextConfig;
