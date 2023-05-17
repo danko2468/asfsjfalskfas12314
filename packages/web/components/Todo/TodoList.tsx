@@ -59,16 +59,17 @@ export function TodoList() {
           <></>
         ) : (
           items && (
-            <ul className="h-full list-none overflow-y-auto border-t">
-              <li className="flex items-center justify-between px-4 py-4">
+            <>
+              <hr className="border-gray-500" />
+              <div className="flex h-[95px] items-center justify-between px-4 py-4">
                 <IcSearch width={30} height={30} className="app_text mr-4" />
                 <EnhancedTextInput
                   placeholder="Search TODO keywords"
                   value={keywords}
                   onChange={onKeywordsChange}
                 />
-              </li>
-              <li className="flex items-center justify-between px-2 py-4">
+              </div>
+              <div className="flex h-[62px] items-center justify-between px-2 py-4">
                 <button
                   className="mx-0 h-[30px] w-[180px] justify-start border-0 p-0 px-1 text-base"
                   onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
@@ -86,19 +87,21 @@ export function TodoList() {
                   <IcFolderDelete className="mr-2" />
                   <span className="text-sm">View Archived</span>
                 </button>
-              </li>
-              {items.length > 0 ? (
-                items.map((v) => <TodoItem key={v.id} {...v} onClick={() => setId(v.id)} />)
-              ) : (
-                <li className="app_text disabled flex cursor-pointer items-center px-4 py-5">No Todo item</li>
-              )}
-            </ul>
+              </div>
+              <ul className="h-[calc(100%-157px)] list-none overflow-y-auto">
+                {items.length > 0 ? (
+                  items.map((v) => <TodoItem key={v.id} {...v} onClick={() => setId(v.id)} />)
+                ) : (
+                  <li className="app_text disabled flex cursor-pointer items-center px-4 py-5">
+                    No Todo item
+                  </li>
+                )}
+              </ul>
+            </>
           )
         )}
       </div>
-      <div className="flex h-[64px] items-center justify-center">
-        {pagination && <Pagination {...pagination} setPage={setPage} />}
-      </div>
+      {pagination && <Pagination {...pagination} setPage={setPage} />}
     </>
   );
 }

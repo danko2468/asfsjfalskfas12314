@@ -39,7 +39,7 @@ export function Pagination({ page, totalPages, setPage }: PropsWithoutRef<Props>
   };
 
   return (
-    <>
+    <div className="flex h-[64px] items-center justify-center">
       <IcFirstPage
         className={clsx("app_text cursor-pointer", isFirstPage && "disabled")}
         onClick={isFirstPage ? undefined : onFisrtPageClick}
@@ -57,6 +57,6 @@ export function Pagination({ page, totalPages, setPage }: PropsWithoutRef<Props>
         className={clsx("app_text cursor-pointer", isLastPage && "disabled")}
         onClick={isLastPage ? undefined : onLastPageClick}
       />
-    </>
+    </div>
   );
 }

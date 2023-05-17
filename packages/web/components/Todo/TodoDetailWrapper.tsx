@@ -15,7 +15,7 @@ export function TodoDetailWrapper() {
   };
 
   return (
-    <div className="h-full border-l border-neutral-500">
+    <div className="h-full border-neutral-500 tablet:border-l">
       {id ? id === "create" ? <NewTodo /> : <TodoDetail id={id} /> : <TodoBlank onCreate={onCreate} />}
     </div>
   );
