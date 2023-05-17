@@ -7,6 +7,16 @@ const nextConfig = {
   images: {
     deviceSizes: [576, 768, 1200],
   },
+  rewrites: async () => ({
+    beforeFiles: [],
+    afterFiles: [],
+    fallback: [
+      {
+        source: "/:path*",
+        destination: "/",
+      },
+    ],
+  }),
 };
 
 module.exports = nextConfig;
