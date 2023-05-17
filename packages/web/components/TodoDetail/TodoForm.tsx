@@ -1,12 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import clsx from "clsx";
+import { PropsWithoutRef, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-import type { PropsWithoutRef } from "react";
 import type { TodoDto } from "~/lib/types";
 
 type Props = {
   defaultValue?: Pick<TodoDto, "title" | "description">;
+  onSubmit: (data: Pick<TodoDto, "title" | "description">) => void | Promise<void>;
+  className?: string;
 };
 
 const schema = yup.object({
@@ -14,21 +17,51 @@ const schema = yup.object({
   description: yup.string().optional(),
 });
 
-export function TodoForm({ defaultValue }: PropsWithoutRef<Props>) {
-  const { register } = useForm({
+export function TodoForm({ defaultValue, onSubmit, className }: PropsWithoutRef<Props>) {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(schema),
+    reValidateMode: "onChange",
     defaultValues: defaultValue ?? {
       title: "",
       description: "",
     },
   });
 
+  const title = watch("title");
+
+  const isButtonDisabled = useMemo(
+    () => !!(!title || errors.description || errors.title),
+    [title, errors.title, errors.description]
+  );
+
   return (
-    <form>
-      <div className="text-3xl text-neutral-300">Title</div>
-      <input {...register("title")} placeholder="what is it?" />
-      <div className="text-3xl text-neutral-300">Description (optional)</div>
-      <textarea {...register("description")} placeholder="for more information, e.g. address, link" />
+    <form
+      className={clsx(
+        "mx-auto flex h-full w-full max-w-[700px] flex-col items-center justify-center p-4",
+        className
+      )}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="mb-12 w-full px-4">
+        <div className="mb-6 text-3xl text-neutral-300">Title *</div>
+        <input {...register("title")} placeholder="What is it?" />
+        {errors.title && <div className="text-red-800">{errors.title.message}</div>}
+      </div>
+      <div className="w-full px-4">
+        <div className="mb-6 text-3xl text-neutral-300">Description</div>
+        <textarea {...register("description")} placeholder="For more information, e.g. address, link" />
+        {errors.description && <div className="text-red-800">{errors.description.message}</div>}
+      </div>
+      <div>
+        <button type="submit" disabled={isButtonDisabled} className="mt-20">
+          Save
+        </button>
+      </div>
     </form>
   );
 }
