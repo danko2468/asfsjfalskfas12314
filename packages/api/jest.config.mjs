@@ -4,8 +4,29 @@ export default {
   moduleFileExtensions: ["js", "json", "ts"],
   roots: ["<rootDir>/src"],
   testMatch: ["**/*.test.ts", "**/*.spec.ts"],
+  extensionsToTreatAsEsm: [".ts"],
   transform: {
-    "^.+\\.(t|j)s?$": ["@swc/jest"],
+    "^.+\\.(t|j)s?$": [
+      "@swc/jest",
+      {
+        module: {
+          type: "es6",
+        },
+        jsc: {
+          target: "es2021",
+          parser: {
+            syntax: "typescript",
+            decorators: true,
+            topLevelAwait: true,
+            importMeta: true,
+          },
+          transform: {
+            legacyDecorator: true,
+            decoratorMetadata: true,
+          },
+        },
+      },
+    ],
   },
   transformIgnorePatterns: [],
   setupFiles: ["<rootDir>/jest.setup.ts"],

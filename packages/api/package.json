@@ -10,7 +10,7 @@
     "clean": "rimraf dist .rollup.cache",
     "build": "rollup -c",
     "start": "node dist/main.js",
-    "test": "jest --passWithNoTests",
+    "test": "node --experimental-vm-modules $(yarn bin jest) --passWithNoTests",
     "predeploy": "functionpack -d dist -p package.json --zip",
     "doc:swagger": "NODE_ENV=development APP_SWAGGER=true rollup -c && node --enable-source-maps ./dist/swagger.js",
     "doc": "typedoc"
@@ -27,6 +27,7 @@
     "yup": "^1.1.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.5.0",
     "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-json": "^6.0.0",
