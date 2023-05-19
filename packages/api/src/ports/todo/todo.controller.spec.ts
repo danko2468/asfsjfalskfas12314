@@ -2,8 +2,10 @@ import { jest, describe, expect, beforeEach } from "@jest/globals";
 
 import { FastifyReplyMockFactory } from "~/__mocks__/fastify.reply.mock.ts";
 import { TodoEntityMockFactory } from "~/__mocks__/todo.entity.mock.ts";
+import { TodoInvalidInputError, TodoNotFoundError, TodoUnknownError } from "~/services/todo/todo.errors.ts";
 
 import type { FastifyRequest } from "fastify";
+import type { HttpError } from "http-errors";
 
 jest.unstable_mockModule("~/services/todo/todo.service.ts", () => ({
   createTodoEntity: jest.fn(),
@@ -47,6 +49,34 @@ describe("TodoController", () => {
       expect(TodoServiceMock.getTodoEntityById).toBeCalledWith(todo.id);
       expectTodoDto(res);
     });
+
+    it("should throw a 404 error", async () => {
+      const id = "id";
+      TodoServiceMock.getTodoEntityById.mockRejectedValueOnce(new TodoNotFoundError());
+      const req = { params: { id } } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.getTodoById(req);
+      } catch (error) {
+        expect((error as HttpError<404>).status).toBe(404);
+      }
+
+      expect(TodoServiceMock.getTodoEntityById).toBeCalledWith(id);
+    });
+
+    it("should throw a 500 error", async () => {
+      const id = "id";
+      TodoServiceMock.getTodoEntityById.mockRejectedValueOnce(new TodoUnknownError());
+      const req = { params: { id } } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.getTodoById(req);
+      } catch (error) {
+        expect((error as HttpError<404>).status).toBe(500);
+      }
+
+      expect(TodoServiceMock.getTodoEntityById).toBeCalledWith(id);
+    });
   });
 
   describe("#getTodoList", () => {
@@ -76,6 +106,50 @@ describe("TodoController", () => {
       expect(res.items).toHaveLength(1);
       res.items.forEach(expectTodoDto);
     });
+
+    it("should throw a 400 error", async () => {
+      const todo = TodoEntityMockFactory({ id: "id" });
+      const todos = [todo];
+      TodoServiceMock.getTodoEntityListByFilter.mockRejectedValueOnce(new TodoInvalidInputError());
+      TodoServiceMock.countTodoEntityByFilter.mockResolvedValueOnce(todos.length);
+
+      const req = { query: {} } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.getTodoList(req);
+      } catch (error) {
+        expect((error as HttpError<400>).status).toBe(400);
+      }
+      expect(TodoServiceMock.getTodoEntityListByFilter).toBeCalledWith({
+        keywords: undefined,
+        page: 0,
+        pageSize: 24,
+        sortOrder: "asc",
+      });
+      expect(TodoServiceMock.countTodoEntityByFilter).not.toBeCalled();
+    });
+
+    it("should throw a 500 error", async () => {
+      const todo = TodoEntityMockFactory({ id: "id" });
+      const todos = [todo];
+      TodoServiceMock.getTodoEntityListByFilter.mockRejectedValueOnce(new TodoUnknownError());
+      TodoServiceMock.countTodoEntityByFilter.mockResolvedValueOnce(todos.length);
+
+      const req = { query: {} } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.getTodoList(req);
+      } catch (error) {
+        expect((error as HttpError<500>).status).toBe(500);
+      }
+      expect(TodoServiceMock.getTodoEntityListByFilter).toBeCalledWith({
+        keywords: undefined,
+        page: 0,
+        pageSize: 24,
+        sortOrder: "asc",
+      });
+      expect(TodoServiceMock.countTodoEntityByFilter).not.toBeCalled();
+    });
   });
 
   describe("#createTodo", () => {
@@ -92,6 +166,42 @@ describe("TodoController", () => {
       expect(reply.status).toBeCalledWith(201);
       expect(reply.send).toBeCalledWith(todo);
       expect(result).toBe(reply);
+    });
+
+    it("should throw a 400 error", async () => {
+      const payload = { title: "title", description: "description" };
+      TodoServiceMock.createTodoEntity.mockRejectedValueOnce(new TodoInvalidInputError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { body: payload } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.createTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<400>).status).toBe(400);
+      }
+
+      expect(TodoServiceMock.createTodoEntity).toBeCalledWith(req.body);
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
+
+    it("should throw a 500 error", async () => {
+      const payload = { title: "title", description: "description" };
+      TodoServiceMock.createTodoEntity.mockRejectedValueOnce(new TodoUnknownError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { body: payload } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.createTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<500>).status).toBe(500);
+      }
+
+      expect(TodoServiceMock.createTodoEntity).toBeCalledWith(req.body);
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
     });
   });
 
@@ -110,6 +220,63 @@ describe("TodoController", () => {
       expect(reply.status).toBeCalledWith(204);
       expect(result).toBe(reply);
     });
+
+    it("should throw a 400 error", async () => {
+      const id = "id";
+      const payload = { title: "title", description: "description" };
+      TodoServiceMock.updateTodoEntity.mockRejectedValueOnce(new TodoInvalidInputError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id }, body: payload } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.updateTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<400>).status).toBe(400);
+      }
+
+      expect(TodoServiceMock.updateTodoEntity).toBeCalledWith({ id, ...payload });
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
+
+    it("should throw a 404 error", async () => {
+      const id = "id";
+      const payload = { title: "title", description: "description" };
+      TodoServiceMock.updateTodoEntity.mockRejectedValueOnce(new TodoNotFoundError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id }, body: payload } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.updateTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<404>).status).toBe(404);
+      }
+
+      expect(TodoServiceMock.updateTodoEntity).toBeCalledWith({ id, ...payload });
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
+
+    it("should throw a 500 error", async () => {
+      const id = "id";
+      const payload = { title: "title", description: "description" };
+      TodoServiceMock.updateTodoEntity.mockRejectedValueOnce(new TodoUnknownError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id }, body: payload } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.updateTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<500>).status).toBe(500);
+      }
+
+      expect(TodoServiceMock.updateTodoEntity).toBeCalledWith({ id, ...payload });
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
   });
 
   describe("#deleteTodo", () => {
@@ -126,6 +293,42 @@ describe("TodoController", () => {
       expect(reply.status).toBeCalledWith(204);
       expect(result).toBe(reply);
     });
+
+    it("should throw a 404 error", async () => {
+      const id = "id";
+      TodoServiceMock.deleteTodoEntityById.mockRejectedValueOnce(new TodoNotFoundError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id } } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.deleteTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<404>).status).toBe(404);
+      }
+
+      expect(TodoServiceMock.deleteTodoEntityById).toBeCalledWith(id);
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
+
+    it("should throw a 500 error", async () => {
+      const id = "id";
+      TodoServiceMock.deleteTodoEntityById.mockRejectedValueOnce(new TodoUnknownError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id } } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.deleteTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<500>).status).toBe(500);
+      }
+
+      expect(TodoServiceMock.deleteTodoEntityById).toBeCalledWith(id);
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
   });
 
   describe("#recoverTodo", () => {
@@ -141,6 +344,42 @@ describe("TodoController", () => {
       expect(reply.send).toBeCalledWith(null);
       expect(reply.status).toBeCalledWith(204);
       expect(result).toBe(reply);
+    });
+
+    it("should throw a 404 error", async () => {
+      const id = "id";
+      TodoServiceMock.recoverTodoEntityById.mockRejectedValueOnce(new TodoNotFoundError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id } } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.recoverTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<404>).status).toBe(404);
+      }
+
+      expect(TodoServiceMock.recoverTodoEntityById).toBeCalledWith(id);
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
+    });
+
+    it("should throw a 500 error", async () => {
+      const id = "id";
+      TodoServiceMock.recoverTodoEntityById.mockRejectedValueOnce(new TodoUnknownError());
+
+      const reply = FastifyReplyMockFactory();
+      const req = { params: { id } } as unknown as FastifyRequest;
+
+      try {
+        await TodoController.recoverTodo(req, reply as never);
+      } catch (error) {
+        expect((error as HttpError<500>).status).toBe(500);
+      }
+
+      expect(TodoServiceMock.recoverTodoEntityById).toBeCalledWith(id);
+      expect(reply.status).not.toBeCalled();
+      expect(reply.send).not.toBeCalled();
     });
   });
 });
