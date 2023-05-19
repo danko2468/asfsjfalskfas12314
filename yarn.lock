@@ -6716,30 +6716,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nexplorer@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "nexplorer@workspace:."
-  dependencies:
-    "@typescript-eslint/eslint-plugin": ^5.59.5
-    "@typescript-eslint/parser": ^5.59.5
-    "@yarnpkg/pnpify": ^3.1.6
-    eslint: ^8.40.0
-    eslint-config-next: ^13.4.2
-    eslint-config-prettier: ^8.8.0
-    eslint-import-resolver-typescript: ^3.5.5
-    eslint-plugin-import: ^2.27.5
-    eslint-plugin-prettier: ^4.2.1
-    next: ^13.4.2
-    prettier: ^2.8.8
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    typescript: ^5.0.4
-  dependenciesMeta:
-    next@13.4.2:
-      unplugged: true
-  languageName: unknown
-  linkType: soft
-
 "next@npm:13.4.2, next@npm:^13.4.2":
   version: 13.4.2
   resolution: "next@npm:13.4.2"
@@ -8906,6 +8882,30 @@ __metadata:
   checksum: f76fa01b3d5be85db6a2a143e24df9f60dd047d151062d0ba3df62953f2f697b16fe5dad9b0ac6191c7efc7b1d9dcaa4b768174b7b29da89d4428e64bc0a20ed
   languageName: node
   linkType: hard
+
+"todo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "todo@workspace:."
+  dependencies:
+    "@typescript-eslint/eslint-plugin": ^5.59.5
+    "@typescript-eslint/parser": ^5.59.5
+    "@yarnpkg/pnpify": ^3.1.6
+    eslint: ^8.40.0
+    eslint-config-next: ^13.4.2
+    eslint-config-prettier: ^8.8.0
+    eslint-import-resolver-typescript: ^3.5.5
+    eslint-plugin-import: ^2.27.5
+    eslint-plugin-prettier: ^4.2.1
+    next: ^13.4.2
+    prettier: ^2.8.8
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ^5.0.4
+  dependenciesMeta:
+    next@13.4.2:
+      unplugged: true
+  languageName: unknown
+  linkType: soft
 
 "toidentifier@npm:1.0.1":
   version: 1.0.1
