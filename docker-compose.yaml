@@ -29,8 +29,8 @@ services:
       - todo_network
     ports:
       - 3000:3000
-    # depends_on:
-    #   - api
+    depends_on:
+      - api
 
 volumes:
   monogo_data:

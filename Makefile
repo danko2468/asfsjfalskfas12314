@@ -12,6 +12,6 @@ web_clean:
 	rm -rf ./packages/web/.next
 
 web_build: web_clean
-	export NEXT_PUBLIC_API_URL=http://localhost:3310
+	echo "NEXT_PUBLIC_API_URL=http://localhost:3310" > ./packages/web/.env
 	@yarn workspace web build
 	@docker build -t todo_web:latest -f ./packages/web/Dockerfile ./packages/web
